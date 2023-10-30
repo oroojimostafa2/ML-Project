@@ -8,6 +8,7 @@ import numpy as np
 df = pd.read_csv(r"vpd.csv")
 df.drop("NPD_WELL_BORE_CODE", axis=1, inplace=True) # There are two different column for well names. We remove the first one
 
+#--------------------------------------------------------------------------------------------------------------------------------
 def well_dataframe(well_name):
     """
     This Function receives the well name and filters the dataframe based on the name.
@@ -25,6 +26,7 @@ def well_dataframe(well_name):
 
     return df_well
 
+# ------------------------------------------------------------------------------------------------------------------------------
 # Injection WELLs (WE have 2 inj wells)
 
 inj_1 = well_dataframe("15/9-F-4") # This well is injection well. Therefore only WI column and On Streaam Hours are good to use.
@@ -47,4 +49,17 @@ inj_2.fillna(value=0, inplace=True)
 
 # Now MErging the Injection wells
 df_inj = inj_1.merge(inj_2, on="DATEPRD", how="inner").reset_index()
+
+#------------------------------------------------------------------------------------------------------------------------------
+# Production Wells
+
+pro_1 = well_dataframe("15/9-F-12")
+pro_1.drop(["NPD_WELL_BORE_NAME", 'BORE_WI_VOL','FLOW_KIND', 'WELL_TYPE', "AVG_DOWNHOLE_PRESSURE"\
+            , "AVG_DOWNHOLE_TEMPERATURE"] , axis=1, inplace=True)
+# We are removing p and T and the end of the well because the sensors have got brkoen and only zero is recorde which is not TRUE!
+pro_1["AVG_DP_TUBING"].interpolate(method="linear", inplace=True)
+pro_1["AVG_ANNULUS_PRESS"].interpolate(method="linear", inplace=True)
+pro_1["AVG_CHOKE_SIZE_P"].interpolate(method="linear", inplace=True)
+
+
 
