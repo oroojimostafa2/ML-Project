@@ -52,7 +52,7 @@ df_inj = inj_1.merge(inj_2, on="DATEPRD", how="inner").reset_index()
 
 #------------------------------------------------------------------------------------------------------------------------------
 # Production Wells
-
+#1
 pro_1 = well_dataframe("15/9-F-12")
 pro_1.drop(["NPD_WELL_BORE_NAME", 'BORE_WI_VOL','FLOW_KIND', 'WELL_TYPE', "AVG_DOWNHOLE_PRESSURE"\
             , "AVG_DOWNHOLE_TEMPERATURE"] , axis=1, inplace=True)
@@ -61,5 +61,19 @@ pro_1["AVG_DP_TUBING"].interpolate(method="linear", inplace=True)
 pro_1["AVG_ANNULUS_PRESS"].interpolate(method="linear", inplace=True)
 pro_1["AVG_CHOKE_SIZE_P"].interpolate(method="linear", inplace=True)
 
+#2
+pro_2 = well_dataframe("15/9-F-14")
+# We are removing average annulus pressure because the sensors have got brkoen when the well has started producing and less than
+# Half the data is avilable
+pro_2.drop(["NPD_WELL_BORE_NAME", 'BORE_WI_VOL','FLOW_KIND', 'WELL_TYPE', "AVG_ANNULUS_PRESS"], inplace=True)
+# when the chokesize is null, we have no production! It is zero then!
+pro_2["AVG_CHOKE_SIZE_P"].fillna(value=0, inplace=True)
+pro_2["AVG_DOWNHOLE_PRESSURE"].interpolate(method="linear", inplace=True)
+pro_2["AVG_DOWNHOLE_TEMPERATURE"].interpolate(method="linear", inplace=True)
+pro_2["AVG_DP_TUBING"].interpolate(method="linear", inplace=True)
 
-
+#3
+pro_3 = well_dataframe("15/9-F-11")
+pro_3.drop(["NPD_WELL_BORE_NAME", 'BORE_WI_VOL','FLOW_KIND', 'WELL_TYPE'], axis=1, inplace=True)
+# We have just 6 na values! Let us drop them.
+pro_3.dropna(inplace=True)
