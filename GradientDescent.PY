@@ -42,22 +42,22 @@ plt.scatter(x_train, y_train)
 plt.scatter(X, y_pred)
 plt.show()
 
-def learning(wl, bl, X, y, iteration, grate):
+def learning(wl, bl, X, y, iteration, learningrate):
     z, j = costfunc(wl, bl, X, y)
     costs = []
     costs.append(j)
 
     for i in range(iteration):
         dw, db = gradient(wl, bl, X, y)
-        wl = wl - (grate * dw)
-        bl = bl - (grate * db)
+        wl = wl - (learningrate * dw)
+        bl = bl - (learningrate * db)
         costs.append(costfunc(wl, bl, X, y)[1])
     wf = wl
     bf = bl
 
     return wf, bf, costs
 
-wf, bf, costs = learning(wl, bl, X, y, 10000, 0.005)
+wf, bf, costs = learning(wl, bl, X, y, 10000, 0.00005)
 yf = wf*x_train+bf
 
 plt.figure()
