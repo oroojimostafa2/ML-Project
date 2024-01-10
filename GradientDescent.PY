@@ -27,10 +27,10 @@ def costfunc(wl, bl, X, y):
     return z, j
 
 def gradient(wl, bl, X, y):
-    z = np.dot(X, wl) + bl
+    c = y - np.dot(X, wl) + bl
     m = X.shape[0]
-    dw = (-2/m)*np.dot(X.T, (y-z))
-    db = (-2/m)*np.sum(y-z)
+    dw = (-2/m)*np.dot(X.T, c)
+    db = (-2/m)*np.sum(c)
     return dw, db
 
 #Training
